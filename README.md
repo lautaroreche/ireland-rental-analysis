@@ -1,4 +1,4 @@
-# Dublin Rental Market Analysis
+# Ireland Rental Market Analysis
 ## Goal / questions
 ## Data sources
 ## Process (clean and modeling)

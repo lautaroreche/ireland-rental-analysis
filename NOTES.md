@@ -1,4 +1,4 @@
-# NOTES — Dublin Rental Analysis
+# NOTES
 
 ---
 

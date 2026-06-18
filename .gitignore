@@ -1,0 +1,10 @@
+cat > .gitignore << 'EOF'
+# Power BI
+*.pbix
+
+# Raw heavy data
+data/raw/
+
+# System
+.DS_Store
+EOF

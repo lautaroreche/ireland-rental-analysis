@@ -40,3 +40,6 @@
 - Se eliminan categorías que agrupan valores en los campos Number of Bedrooms y Property Type ya que se decide dejar solamente los valores individuales para no duplicar datos.
 - Se eliminan valores null dentro del campo VALUE ya que eran combinaciones sin dato oficial por parte del RTB
 - Se separa la columna Quarter en 2, siendo una para Year y otra propiamente para Quarter
+### 24/06/2026
+- Creé el dashboard en Power BI utilizando una virtual machine de Windows 11
+- Se crea la medida calculada de promedio de renta por localidad, siendo Dublin la de valor más alto por diferencia

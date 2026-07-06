@@ -3,57 +3,57 @@
 ---
 
 ## Key decisions
-- Nivel geográfico: voy por nivel condado. La columna Location mezcla condados, distritos y barrios. Me quedo solo con filas de condado entero para tener comparación limpia. Descarto sub-zonas.
-- Se decide eliminar las columnas STATISTIC y UNIT en la etapa de limpieza de datos ya que contienen los mismos valores para todos los registros.
-- Se van a utilizar solamente los datos que contengan un nombre de condado puro en el campo Location ya que el RTB ya hizo el cálculo de promedio a nivel condado a la hora de crear la tabla.
-- Se eliminan categorías agregadas en los campos Number of Bedrooms y Property Type ya que se decide dejar solamente los valores individuales para no duplicar datos.
-- Se eliminan valores null dentro del campo VALUE ya que eran combinaciones sin dato oficial por parte del RTB.
-- Se excluye el análisis del encarecimiento del tipo Apartment en grandes urbes para no desviar el foco del objetivo; queda registrado como posible análisis futuro (detalle en Findings).
+- Geographic level: county. The Location field mixes counties, districts and neighbourhoods. Keeping only rows at county level for a clean comparison; sub-zones are discarded.
+- The STATISTIC and UNIT columns are removed during data cleaning since they contain the same value for every record.
+- Only records with a plain county name in Location are kept, since the RTB already computes the county-level average when producing the table.
+- Aggregated categories in Number of Bedrooms and Property Type are removed; only individual values are kept to avoid double counting.
+- Null values in the VALUE field are removed since they correspond to combinations with no official RTB data.
+- The analysis of apartment price increases in large urban areas is excluded to keep the focus of the objective; it stays recorded as a possible future analysis (details in Findings).
 
 ---
 
 ## Open problems / doubts
-- [x] Ver si STATISTIC Label tiene más de un valor
-- [x] Confirmar cómo conviven condados y sub-zonas en Location
-- [x] Revisar los 7 valores de Number of Bedrooms y 6 de Property Type para confirmar si hay categorías que abarquen otras como totales agregados (all, portions)
-- [x] Confirmar si los 26 condados de Irlanda existen como valores independientes además de ser en formato "barrio - condado"
+- [x] Check whether STATISTIC Label has more than one value
+- [x] Confirm how counties and sub-zones coexist in Location
+- [x] Review the 7 values of Number of Bedrooms and 6 of Property Type to confirm whether any category aggregates others (totals, ranges)
+- [x] Confirm whether the 26 Irish counties exist as standalone values in addition to the "neighbourhood – county" format
 
 ---
 
 ## Findings
-- STATISTIC Label tiene un mismo valor para todos los registros que es "RTB Average Monthly Rent Report".
-- Cada Location tiene exactamente 2310 registros posibles, que son los resultados de combinar Quarter, Number of Bedrooms y Property Type independientemente de si tienen un valor o si están en blanco o nulos.
-- Hay categorías dentro de los campos que abarcan otras categorías, ya que son rangos o totales. Por ejemplo, en Property Type la selección "All property types" abarca todos los tipos individuales (Apartment, Detached house, Semi detached house, Terrace house y Other flats). Lo mismo ocurre en Number of Bedrooms, donde opciones como "1 to 3 bed" se solapan con "One bed", "Two bed" y "Three bed".
-- Los 26 condados existen como valores independientes, así que se confirma la decisión de usar nivel geográfico de condados.
-- Las semi-detached houses fueron el tipo de propiedad que más se encareció, en un 134% entre 2012 y 2025, por lo cual queda por encima del promedio general de 124%. El tipo que menos se encareció fue Apartment, con un 112,87%. La diferencia entre el primero y el último es acotada, por lo que la lectura general es que todos los tipos crecieron de forma fuerte y relativamente pareja.
-- Posible análisis futuro: a nivel general Apartment es el tipo que menos se encareció en el período, pero este patrón se invierte en centros urbanos grandes como Dublin, Cork y Galway, donde Apartment pasa a ser el tipo de propiedad con mayor aumento de renta. Hipótesis: se debería a la fuerte demanda por este tipo de vivienda en grandes urbes. No verificado en este análisis; queda para un análisis individual futuro.
-- El condado más económico para viviendas familiares (3+ beds) es Donegal. Hipótesis: se explicaría por su lejanía de los grandes centros urbanos y económicos. No verificado con este dataset, que solo contiene datos de renta.
-- Dublin es el condado con mayor renta promedio del período y crece más que proporcionalmente frente a condados como Donegal. Esta brecha se amplía al filtrar por viviendas familiares (3+ beds). (Pendiente: cuantificar la brecha con un número concreto para cerrar la pregunta secundaria.)
+- STATISTIC Label has a single value for every record: "RTB Average Monthly Rent Report".
+- Each Location has exactly 2,310 possible records, resulting from combining Quarter, Number of Bedrooms and Property Type — regardless of whether the value is populated, blank or null.
+- Some fields contain categories that aggregate other categories, either as ranges or totals. For example, in Property Type the option "All property types" covers every individual type (Apartment, Detached house, Semi detached house, Terrace house and Other flats). The same happens in Number of Bedrooms, where options such as "1 to 3 bed" overlap with "One bed", "Two bed" and "Three bed".
+- The 26 counties exist as standalone values, confirming the decision to work at county level.
+- Semi-detached houses grew the most in price, by 134% between 2012 and 2025, above the general average of 124%. The type that grew the least was Apartment, at 112.87%. The spread between the top and bottom is narrow, so the overall reading is that every property type grew strongly and fairly evenly.
+- Possible future analysis: at national level Apartment is the type that grew the least over the period, but this pattern reverses in large urban centres like Dublin, Cork and Galway, where Apartment becomes the type with the highest rent increase. Hypothesis: strong demand for this type of housing in large cities. Not verified in this analysis; left for a separate future analysis.
+- The most affordable county for family housing (3+ beds) is Donegal. Hypothesis: explained by its distance from major urban and economic centres. Not verified with this dataset, which only contains rent data.
+- Dublin is the county with the highest average rent over the period and grows more than proportionally compared to counties like Donegal. This gap widens further when filtering for family homes (3+ beds). (Pending: quantify the gap with a concrete number to close the secondary question.)
 
 ---
 
 ## Logs
 
 ### 18/06/2026
-- Descargué la base de datos RIQ02 de la CSO en formato CSV.
-- Columnas: STATISTIC Label, Quarter, Number of Bedrooms, Property Type, Location, UNIT, VALUE.
-- Detecté que el campo Location mezcla niveles geográficos, ya que el archivo es a nivel nacional y tiene datos de condado, distritos y barrios. Decidí quedarme con el nivel de condado por la escala del análisis, descartando las sub-zonas.
+- Downloaded the RIQ02 dataset from the CSO in CSV format.
+- Columns: STATISTIC Label, Quarter, Number of Bedrooms, Property Type, Location, UNIT, VALUE.
+- Detected that the Location field mixes geographic levels, since the file covers national data including counties, districts and neighbourhoods. Decided to keep the county level for the scale of the analysis, discarding sub-zones.
 
 ### 21/06/2026
-- Confirmé que los 26 condados existen como valores independientes en el campo Location.
+- Confirmed that the 26 counties exist as standalone values in the Location field.
 
 ### 22/06/2026
-- Limpié los datos usando Power Query. Se eliminaron las columnas STATISTIC y UNIT, se modificó el campo VALUE a tipo currency y se descartaron datos que no tengan en Location un valor que coincida exactamente con el nombre de alguno de los 26 condados de Irlanda.
-- Se eliminan categorías que agrupan valores en los campos Number of Bedrooms y Property Type ya que se decide dejar solamente los valores individuales para no duplicar datos.
-- Se eliminan valores null dentro del campo VALUE ya que eran combinaciones sin dato oficial por parte del RTB.
-- Se separa la columna Quarter en 2, siendo una para Year y otra propiamente para Quarter.
+- Cleaned the data using Power Query. The STATISTIC and UNIT columns were removed, the VALUE field was set to currency type, and rows whose Location did not exactly match one of the 26 Irish counties were discarded.
+- Aggregated categories in Number of Bedrooms and Property Type were removed; only individual values were kept to avoid double counting.
+- Null values in the VALUE field were removed since they were combinations with no official RTB data.
+- The Quarter column was split in two: Year and Quarter.
 
 ### 24/06/2026
-- Creé el dashboard en Power BI utilizando una virtual machine de Windows 11.
-- Se crea la medida calculada de promedio de renta por localidad, siendo Dublin la de valor más alto por diferencia.
+- Built the dashboard in Power BI using a Windows 11 virtual machine.
+- Created the calculated measure for average rent by location; Dublin has the highest value by a clear margin.
 
 ### 29/06/2026
-- Continué con el dashboard en Power BI en un entorno Windows 11 sin utilizar virtual machine.
-- Creé medidas calculadas para obtener rentas promedio, el promedio general del primer y último año y el tipo de propiedad que más se encareció.
-- Detecté un posible análisis a hacer en el futuro, el cual se explica en Findings.
-- Se responden las dos hipótesis principales del análisis.
+- Continued the Power BI dashboard on a Windows 11 environment without a virtual machine.
+- Created calculated measures to obtain average rents, the general average for the first and last year, and the property type with the highest increase.
+- Detected a possible future analysis, explained in Findings.
+- Both main hypotheses of the analysis were answered.
